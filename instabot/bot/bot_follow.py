@@ -74,6 +74,7 @@ def follow_users(self, user_ids):
 
 
 def follow_followers(self, user_id, nfollows=None):
+    followed = self.followed_file
     self.logger.info("Follow followers of: {}".format(user_id))
     if self.reached_limit('follows'):
         self.logger.info("Out of follows for today.")
@@ -81,8 +82,8 @@ def follow_followers(self, user_id, nfollows=None):
     if not user_id:
         self.logger.info("User not found.")
         return
-    followers = self.get_user_followers(user_id, nfollows)
-    followers = list(set(followers) - set(self.blacklist))
+    followers = self.get_user_followers(user_id)
+    followers = list(set(followers) - followed.set - set(self.blacklist))
     if not followers:
         self.logger.info("{} not found / closed / has no followers.".format(user_id))
     else:
